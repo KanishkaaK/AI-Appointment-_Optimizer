@@ -13,7 +13,7 @@ label_encoder_contact_verified = joblib.load('label_encoder_contact_verified.job
 
 # App Title
 st.set_page_config(page_title="AI Appointment Miss Predictor", layout="centered")
-st.title("AI Appointment Miss Predictor (Advanced)")
+st.title("AI Appointment  Predictor ")
 
 # Helper function: convert to 12hr format
 def hour_12_format(hour):
@@ -47,19 +47,17 @@ patient_age = st.slider("Patient Age", 1, 100, 30)
 patient_gender = st.radio("Patient Gender", ["Male", "Female"])
 gender_encoded = 0 if patient_gender == "Male" else 1
 
-past_miss_count = st.number_input("Past Miss Count", min_value=0, max_value=10, value=0)
-distance_from_clinic_km = st.number_input("Distance from Clinic (km)", min_value=0.0, max_value=100.0, value=5.0)
+distance_from_clinic_km = st.number_input("Distance from Clinic (km)", min_value=0, max_value=100, value=5)
 
-contact_verified = st.radio("Contact Number Verified", ['Yes', 'No'])
-contact_verified_encoded = label_encoder_contact_verified.transform([contact_verified])[0]
+
 
 # Predict button
 if st.button("Predict Miss Probability"):
     input_data = pd.DataFrame(
         [[doctor_encoded, appointment_hour_12, appointment_day_of_week, delay_mins, appointment_type_encoded,
-          patient_age, gender_encoded, past_miss_count, distance_from_clinic_km, contact_verified_encoded]],
+          patient_age, gender_encoded, , distance_from_clinic_km, contact_verified_encoded]],
         columns=['doctor_id_encoded', 'appointment_hour', 'appointment_day_of_week', 'delay_mins', 'appointment_type_encoded',
-                 'patient_age', 'patient_gender_encoded', 'past_miss_count', 'distance_from_clinic_km', 'contact_number_verified_encoded']
+                 'patient_age', 'patient_gender_encoded', , 'distance_from_clinic_km', ]
     )
 
     prob_miss = model.predict_proba(input_data)[0, 1]
@@ -87,23 +85,23 @@ if st.button("Predict Miss Probability"):
         'appointment_type': appointment_type,
         'patient_age': patient_age,
         'patient_gender': patient_gender,
-        'past_miss_count': past_miss_count,
+        
         'distance_from_clinic_km': distance_from_clinic_km,
-        'contact_verified': contact_verified,
+        
         'miss_probability': round(prob_miss, 2),
         'suggestion': suggestion
     }
 
     log_df = pd.DataFrame([log_entry])
 
-    if os.path.exists("prediction_log.csv"):
-        log_df.to_csv("prediction_log.csv", mode='a', header=False, index=False)
+    if os.path.exists("Confirmation_report.csv"):
+        log_df.to_csv("Confirmation_report.csv", mode='a', header=False, index=False)
     else:
-        log_df.to_csv("prediction_log.csv", index=False)
+        log_df.to_csv("Confirmation_report.csv", index=False)
 
-    st.info("Prediction logged ")
+    st.info("Confirmation_report ")
 
 # Download log
-if os.path.exists("prediction_log.csv"):
-    with open("prediction_log.csv", "rb") as f:
-        st.download_button("📥 Download Prediction Log (CSV)", f, file_name="prediction_log.csv")
+if os.path.exists("Confirmatiion_report.csv"):
+    with open("Confirmatiion_report.csv", "rb") as f:
+        st.download_button("📥 Download Confirmation_report(CSV)", f, file_name="Confirmation_report.csv")
