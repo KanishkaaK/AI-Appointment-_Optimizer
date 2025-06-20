@@ -55,7 +55,7 @@ distance_from_clinic_km = st.number_input("Distance from Clinic (km)", min_value
 if st.button("Predict Miss Probability"):
     input_data = pd.DataFrame(
         [[doctor_encoded, appointment_hour_12, appointment_day_of_week, delay_mins, appointment_type_encoded,
-          patient_age, gender_encoded, , distance_from_clinic_km, contact_verified_encoded]],
+          patient_age, gender_encoded,  distance_from_clinic_km, ]],
         columns=['doctor_id_encoded', 'appointment_hour', 'appointment_day_of_week', 'delay_mins', 'appointment_type_encoded',
                  'patient_age', 'patient_gender_encoded' , 'distance_from_clinic_km', ]
     )
