@@ -57,7 +57,7 @@ if st.button("Predict Miss Probability"):
         [[doctor_encoded, appointment_hour_12, appointment_day_of_week, delay_mins, appointment_type_encoded,
           patient_age, gender_encoded, , distance_from_clinic_km, contact_verified_encoded]],
         columns=['doctor_id_encoded', 'appointment_hour', 'appointment_day_of_week', 'delay_mins', 'appointment_type_encoded',
-                 'patient_age', 'patient_gender_encoded', , 'distance_from_clinic_km', ]
+                 'patient_age', 'patient_gender_encoded' , 'distance_from_clinic_km', ]
     )
 
     prob_miss = model.predict_proba(input_data)[0, 1]
