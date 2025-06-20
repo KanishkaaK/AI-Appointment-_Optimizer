@@ -1,17 +1,19 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import joblib
 import os
 from datetime import datetime
 
 # Load model and encoders
 model = joblib.load('miss_model.joblib')
-le_appointment_type = joblib.load('label_encoder.joblib')
-le_doctor = joblib.load('label_encoder_doctor.joblib')
-le_gender = joblib.load('label_encoder_gender.joblib')
+label_encoder_doctor = joblib.load('label_encoder_doctor.joblib')
+label_encoder_appointment_type = joblib.load('label_encoder_appointment_type.joblib')
+label_encoder_contact_verified = joblib.load('label_encoder_contact_verified.joblib')
 
-# Title
-st.title("AI Appointment miss Predictor (Advanced)")
+# App Title
+st.set_page_config(page_title="AI Appointment Miss Predictor", layout="centered")
+st.title("AI Appointment Miss Predictor (Advanced)")
 
 # Helper function: convert to 12hr format
 def hour_12_format(hour):
@@ -21,12 +23,12 @@ def hour_12_format(hour):
     return f"{hour_display}:00 {am_pm}"
 
 # Inputs
-selected_doctor = st.selectbox("Select Doctor", le_doctor.classes_)
-doctor_encoded = le_doctor.transform([selected_doctor])[0]
+selected_doctor = st.selectbox("Select Doctor", label_encoder_doctor.classes_)
+doctor_encoded = label_encoder_doctor.transform([selected_doctor])[0]
 
 appointment_hour_12 = st.selectbox(
-    "Select Appointment Time (12-Hour Format)",
-    options=range(6, 9),
+    "Select Appointment Time (6 AM to 8 AM)",
+    options=[6, 7, 8],
     format_func=hour_12_format
 )
 
@@ -36,23 +38,23 @@ appointment_day_of_week = st.selectbox(
     format_func=lambda x: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][x]
 )
 
-delay_mins = st.number_input("Expected Delay (mins)", min_value=0, value=0)
+delay_mins = st.number_input("Expected Delay (mins)", min_value=0, max_value=60, value=0)
 
-appointment_type = st.selectbox("Appointment Type", le_appointment_type.classes_)
-appointment_type_encoded = le_appointment_type.transform([appointment_type])[0]
+appointment_type = st.selectbox("Appointment Type", label_encoder_appointment_type.classes_)
+appointment_type_encoded = label_encoder_appointment_type.transform([appointment_type])[0]
 
 patient_age = st.slider("Patient Age", 1, 100, 30)
-patient_gender = st.selectbox("Patient Gender", le_gender.classes_)
-gender_encoded = le_gender.transform([patient_gender])[0]
+patient_gender = st.radio("Patient Gender", ["Male", "Female"])
+gender_encoded = 0 if patient_gender == "Male" else 1
 
-past_no_show_count = st.number_input("Past miss Count", min_value=0, value=0)
-distance_from_clinic_km = st.number_input("Distance from Clinic (km)", min_value=0.0, value=2.0)
+past_miss_count = st.number_input("Past Miss Count", min_value=0, max_value=10, value=0)
+distance_from_clinic_km = st.number_input("Distance from Clinic (km)", min_value=0.0, max_value=100.0, value=5.0)
 
-contact_verified = st.selectbox("Contact Number Verified", ['Yes', 'No'])
-contact_verified_encoded = 1 if contact_verified == 'Yes' else 0
+contact_verified = st.radio("Contact Number Verified", ['Yes', 'No'])
+contact_verified_encoded = label_encoder_contact_verified.transform([contact_verified])[0]
 
 # Predict button
-if st.button("Predict miss Probability"):
+if st.button("Predict Miss Probability"):
     input_data = pd.DataFrame(
         [[doctor_encoded, appointment_hour_12, appointment_day_of_week, delay_mins, appointment_type_encoded,
           patient_age, gender_encoded, past_miss_count, distance_from_clinic_km, contact_verified_encoded]],
@@ -62,7 +64,7 @@ if st.button("Predict miss Probability"):
 
     prob_miss = model.predict_proba(input_data)[0, 1]
 
-    st.write(f"### 🎯 Predicted miss Probability: **{prob_miss:.2f}**")
+    st.write(f"###  Predicted Miss Probability: **{prob_miss:.2f}**")
     st.progress(1 - prob_miss)
 
     if prob_miss < 0.3:
@@ -72,14 +74,14 @@ if st.button("Predict miss Probability"):
         st.warning(" Medium Risk - Recommend confirming with the client.")
         suggestion = "Recommend phone confirmation."
     else:
-        st.error(" Not Available - High risk of no-show.")
+        st.error(" Not Available - High risk of miss.")
         suggestion = "Consider rescheduling or double-check with client."
 
     # Log
     log_entry = {
         'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         'doctor_id': selected_doctor,
-        'appointment_hour_12': hour_12_format(appointment_hour_12),
+        'appointment_hour': hour_12_format(appointment_hour_12),
         'appointment_day_of_week': ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][appointment_day_of_week],
         'delay_mins': delay_mins,
         'appointment_type': appointment_type,
