@@ -53,7 +53,7 @@ with st.form("appointment_form"):
 
     
 
-    contact_number = st.text_input("Patient Contact Number", max_chars=15)
+    contact_number = st.text_input("Patient Contact Number", max_chars=10)
 
     # Submit button
     submitted = st.form_submit_button("Predict Availability")
