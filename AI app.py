@@ -45,13 +45,13 @@ with st.form("appointment_form"):
 
     appointment_type = st.selectbox("Appointment Type", label_encoder_appointment_type.classes_)
 
-    patient_age = st.slider("Patient Age", min_value=0, max_value=120, value=30)
+    patient_age = st.slider("Patient Age", min_value=0, max_value=100, value=30)
 
     patient_gender = st.radio("Patient Gender", ["Male", "Female"], horizontal=True)
 
-    distance_from_clinic_km = st.number_input("Distance from Clinic (km)", min_value=0.0, max_value=100.0, value=5.0)
+    distance_from_clinic_km = st.number_input("Distance from Clinic (km)", min_value=0, max_value=100, value=5)
 
-    past_miss_count = st.number_input("Past Miss Count", min_value=0, max_value=10, value=0)
+    
 
     contact_number = st.text_input("Patient Contact Number", max_chars=15)
 
@@ -74,7 +74,6 @@ if submitted:
         label_encoder_appointment_type.transform([appointment_type])[0],
         patient_age,
         0 if patient_gender == "Male" else 1,
-        past_miss_count,
         distance_from_clinic_km,
         contact_verified_encoded
     ]])
@@ -104,7 +103,6 @@ if submitted:
         "patient_age": patient_age,
         "patient_gender": patient_gender,
         "distance_from_clinic_km": distance_from_clinic_km,
-        "past_miss_count": past_miss_count,
         "contact_number": contact_number,
         "prediction": prediction
     }
