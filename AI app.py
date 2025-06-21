@@ -113,14 +113,14 @@ if st.button(" Predict Availability"):
     
     log_df = pd.DataFrame([log_entry])
     
-    if os.path.exists("Confirmation_Report.csv"):
-        log_df.to_csv("Confirmation_Report.csv", mode='a', header=False, index=False)
+    if os.path.exists("prediction_log.csv"):
+        log_df.to_csv("prediction_log.csv", mode='a', header=False, index=False)
     else:
-        log_df.to_csv("Confirmation_Report.csv", index=False)
+        log_df.to_csv("prediction_log.csv", index=False)
     
-    st.info("Confirmation_Report ")
+    st.info("Confirmed_Report ")
 
 # --- Download log ---
-if os.path.exists("Confirmation_Report.csv"):
-    with open("Confirmed_Report.csv", "rb") as f:
-        st.download_button("📥 Download Confirmation_Report (CSV)", f, file_name="Confirmation_Report.csv")
+if os.path.exists("prediction_log.csv"):
+    with open("prediction_log.csv", "rb") as f:
+        st.download_button("📥 Download Prediction Log (CSV)", f, file_name="prediction_log.csv")
