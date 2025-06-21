@@ -53,7 +53,7 @@ with col2:
 
     past_miss_count = st.number_input(" Past Miss Count", min_value=0, value=0)
 
-    distance_from_clinic_km = st.number_input(" Distance from Clinic (km)", min_value=0.0, value=2.0)
+    distance_from_clinic_km = st.number_input(" Distance from Clinic (km)", min_value=0, value=2)
 
 # Contact number
 contact_number = st.text_input("📞 Contact Number (optional)")
@@ -113,14 +113,14 @@ if st.button(" Predict Availability"):
     
     log_df = pd.DataFrame([log_entry])
     
-    if os.path.exists("prediction_log.csv"):
-        log_df.to_csv("prediction_log.csv", mode='a', header=False, index=False)
+    if os.path.exists("Confirmation_report.csv"):
+        log_df.to_csv("Confirmation_report.csv", mode='a', header=False, index=False)
     else:
-        log_df.to_csv("prediction_log.csv", index=False)
+        log_df.to_csv("Confirmation_report.csv", index=False)
     
-    st.info(" Prediction Logged")
+    st.info(" Confirmed_Reort")
 
 # --- Download log ---
-if os.path.exists("prediction_log.csv"):
-    with open("prediction_log.csv", "rb") as f:
-        st.download_button("📥 Download Prediction Log (CSV)", f, file_name="prediction_log.csv")
+if os.path.exists("Confirmation_report.csv"):
+    with open("Confirmation_report.csv", "rb") as f:
+        st.download_button("📥 Download Confirmation_report (CSV)", f, file_name="Confirmation_report.csv")
