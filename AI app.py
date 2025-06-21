@@ -8,7 +8,7 @@ from datetime import datetime
 model = joblib.load('miss_model.joblib')
 le_appointment_type = joblib.load('label_encoder_appointment_type.joblib')
 le_doctor = joblib.load('label_encoder_doctor.joblib')
-le_gender = joblib.load('label_encoder_gender.joblib')
+
 
 # Title
 st.title("AI Appointment Availability Predictor (6 AM - 8 AM)")
