@@ -8,7 +8,7 @@ from datetime import datetime
 model = joblib.load('miss_model.joblib')
 le_appointment_type = joblib.load('label_encoder_appointment_type.joblib')
 le_doctor = joblib.load('label_encoder_doctor.joblib')
-
+le_gender = joblib.load('label_encoder_gender.joblib')
 
 # Title
 st.title("AI Appointment Availability Predictor (6 AM - 8 AM)")
@@ -54,7 +54,7 @@ patient_age = st.slider("Patient Age", 1, 100, 30)
 patient_gender = st.selectbox("Patient Gender", le_gender.classes_)
 gender_encoded = le_gender.transform([patient_gender])[0]
 
-# Past No-show count
+# Past Miss count
 past_miss_count = st.number_input("Past Miss Count", min_value=0, value=0)
 
 # Distance from clinic
@@ -127,5 +127,5 @@ if st.button("Predict Availability"):
 
 # --- Download log ---
 if os.path.exists("Confirmation_Report.csv"):
-    with open("Confirmed_Report.csv", "rb") as f:
+    with open("Confirmation_Report.csv", "rb") as f:
         st.download_button("📥 Download Confirmation_Report (CSV)", f, file_name="Confirmation_Report.csv")
