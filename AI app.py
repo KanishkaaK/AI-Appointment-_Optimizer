@@ -11,7 +11,7 @@ model = joblib.load("miss_model.joblib")
 # Load label encoders
 label_encoder_doctor = joblib.load("label_encoder_doctor.joblib")
 label_encoder_appointment_type = joblib.load("label_encoder_appointment_type.joblib")
-
+label_encoder_contact_verified = joblib.load("label_encoder_contact_verified.joblib")
 
 st.set_page_config(page_title="AI Appointment Availability Predictor", layout="centered")
 
@@ -66,17 +66,23 @@ if submitted:
 
     contact_verified_encoded = 1 if len(contact_number.strip()) > 0 else 0
 
-    input_data = np.array([[
-        label_encoder_doctor.transform([doctor])[0],
-        appointment_hour,
-        day_of_week_num,
-        delay_mins,
-        label_encoder_appointment_type.transform([appointment_type])[0],
-        patient_age,
-        0 if patient_gender == "Male" else 1,
-        distance_from_clinic_km,
-        contact_verified_encoded
-    ]])
+    input_data = pd.DataFrame(
+    [[doctor_encoded, appointment_hour_12, appointment_day_of_week, delay_mins, appointment_type_encoded,
+      patient_age, gender_encoded, past_miss_count, distance_from_clinic_km, contact_verified_encoded]],
+    columns=[
+        'doctor_id_encoded',
+        'appointment_hour',
+        'day_of_week',
+        'delay_mins',
+        'appointment_type_encoded',
+        'patient_age',
+        'gender_encoded',
+        'past_miss_count',
+        'distance_from_clinic_km',
+        'contact_verified_encoded'
+    ]
+)
+
 
     # Predict
     predicted_prob = model.predict_proba(input_data)[0][1]
