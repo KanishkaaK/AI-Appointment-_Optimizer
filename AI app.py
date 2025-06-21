@@ -58,7 +58,7 @@ gender_encoded = le_gender.transform([patient_gender])[0]
 past_miss_count = st.number_input("Past Miss Count", min_value=0, value=0)
 
 # Distance from clinic
-distance_from_clinic_km = st.number_input("Distance from Clinic (km)", min_value=0.0, value=2.0)
+distance_from_clinic_km = st.number_input("Distance from Clinic (km)", min_value=0., value=2)
 
 # Contact Number
 contact_number = st.text_input("Contact Number (optional)")
