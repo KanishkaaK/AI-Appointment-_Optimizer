@@ -30,7 +30,7 @@ with col1:
 
     appointment_hour_12 = st.selectbox(
         " Select Appointment Time (12-Hour Format)",
-        options=range(6, 9),  # 6AM - 8AM
+        options=range(6, 21),  # 6 AM → 8 PM = 6 to 20
         format_func=hour_12_format
     )
 
@@ -43,16 +43,8 @@ with col1:
     delay_mins = st.number_input(" Expected Delay (mins)", min_value=0, value=0)
 
 with col2:
-    appointment_time = st.selectbox(
-            "Select Appointment Time (6 AM to 10 PM)",
-            [
-                "06:00 AM", "06:30 AM", "07:00 AM", "07:30 AM", "08:00 AM", "08:30 AM", "09:00 AM", "09:30 AM",
-                "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM",
-                "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM",
-                "06:00 PM", "06:30 PM", "07:00 PM", "07:30 PM", "08:00 PM", "08:30 PM", "09:00 PM", "09:30 PM",
-                "10:00 PM"
-            ]
-        )
+    appointment_type = st.selectbox(" Appointment Type", le_appointment_type.classes_)
+    appointment_type_encoded = le_appointment_type.transform([appointment_type])[0]
 
     patient_age = st.slider(" Patient Age", 1, 100, 30)
 
@@ -61,7 +53,7 @@ with col2:
 
     past_miss_count = st.number_input(" Past Miss Count", min_value=0, value=0)
 
-    distance_from_clinic_km = st.number_input(" Distance from Clinic (km)", min_value=0, value=2)
+    distance_from_clinic_km = st.number_input(" Distance from Clinic (km)", min_value=0.0, value=2.0)
 
 # Contact number
 contact_number = st.text_input("📞 Contact Number (optional)")
@@ -126,7 +118,7 @@ if st.button(" Predict Availability"):
     else:
         log_df.to_csv("prediction_log.csv", index=False)
     
-    st.info("Confirmed_Report ")
+    st.info(" Prediction Logged")
 
 # --- Download log ---
 if os.path.exists("prediction_log.csv"):
