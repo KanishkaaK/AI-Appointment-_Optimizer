@@ -61,13 +61,13 @@ with st.form("appointment_form"):
 # If button pressed
 if submitted:
     # Prepare input
-    appointment_hour = int(datetime.strptime(appointment_time, "%I:%M %p").strftime("%H"))
+    appointment_hour = appointment_hour_12
     day_of_week_num = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].index(day_of_week)
 
     contact_verified_encoded = 1 if len(contact_number.strip()) > 0 else 0
 
     input_data = pd.DataFrame(
-    [[doctor_encoded, appointment_hour_12, appointment_day_of_week, delay_mins, appointment_type_encoded,
+    [[doctor_encoded, appointment_hour_value, appointment_day_of_week, delay_mins, appointment_type_encoded,
       patient_age, gender_encoded, past_miss_count, distance_from_clinic_km, contact_verified_encoded]],
     columns=[
         'doctor_id_encoded',
