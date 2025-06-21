@@ -11,7 +11,7 @@ le_doctor = joblib.load('label_encoder_doctor.joblib')
 le_gender = joblib.load('label_encoder_gender.joblib')
 
 # Title
-st.title("AI Appointment Availability Predictor (6 AM - 8 AM)")
+st.title("AI Appointment Availability Predictor ")
 
 # Helper: convert to 12hr string
 def hour_12_format(hour):
@@ -58,7 +58,7 @@ gender_encoded = le_gender.transform([patient_gender])[0]
 past_miss_count = st.number_input("Past Miss Count", min_value=0, value=0)
 
 # Distance from clinic
-distance_from_clinic_km = st.number_input("Distance from Clinic (km)", min_value=0., value=2)
+distance_from_clinic_km = st.number_input("Distance from Clinic (km)", min_value=0, value=2)
 
 # Contact Number
 contact_number = st.text_input("Contact Number (optional)")
