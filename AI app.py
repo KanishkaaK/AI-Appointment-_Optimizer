@@ -11,7 +11,7 @@ model = joblib.load("miss_model.joblib")
 # Load label encoders
 label_encoder_doctor = joblib.load("label_encoder_doctor.joblib")
 label_encoder_appointment_type = joblib.load("label_encoder_appointment_type.joblib")
-label_encoder_contact_verified = joblib.load("label_encoder_contact_verified.joblib")
+
 
 st.set_page_config(page_title="AI Appointment Availability Predictor", layout="centered")
 
